@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+import button
 # Cores
 PRETO = (0, 0, 0)
 BRANCO = (255, 255, 255)
@@ -18,6 +19,7 @@ pygame.display.set_caption("Tela de Início")
 
 # Fonte para o texto
 fonte = pygame.font.Font(None, 40)
+coin_sound = pygame.mixer.Sound('assets/audio/coin.wav')
 
 def desenhar_tela_inicio():
     tela_inicio.fill(BRANCO)
@@ -76,7 +78,7 @@ def tela_jogo():
 
         if pygame.sprite.groupcollide(playerGroup, groundGroup, False, False):
             SPEED = 0
-            print('collision')
+            # print('collision')
         else:
             SPEED = 10
 
@@ -85,7 +87,7 @@ def tela_jogo():
 
         if placar % 5 == 0 and placar != 0:
             GAME_SPEED += 0.02
-            print('GAMESPEED ALTERADA')
+            # print('GAMESPEED ALTERADA')
 
         if pygame.sprite.groupcollide(playerGroup, obstacleGroup, False, False):
             gameloop = False
@@ -107,33 +109,33 @@ def fly(player):
     key = pygame.key.get_pressed()
     if key[pygame.K_SPACE]:
         player.rect[1] -= 30
-        player.image = pygame.image.load('sprites/Fly.png').convert_alpha()
+        player.image = pygame.image.load('assets/sprites/player/fly/Fly.png').convert_alpha()
         player.image = pygame.transform.scale(player.image, [100, 100])
-        print('fly')
+        # print('fly')
 
 def fall(player):
     key = pygame.key.get_pressed()
     if not pygame.sprite.groupcollide(playerGroup, groundGroup, False, False) and not key[pygame.K_SPACE]:
         player.image = player.image_fall
         player.image = pygame.transform.scale(player.image, [100, 100])
-        print('falling')
+        # print('falling')
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image_run = [pygame.image.load('sprites/Run__000.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__001.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__002.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__003.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__004.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__005.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__006.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__007.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__008.png').convert_alpha(),
-                          pygame.image.load('sprites/Run__009.png').convert_alpha(),
+        self.image_run = [pygame.image.load('assets/sprites/player/run/Run__000.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__001.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__002.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__003.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__004.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__005.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__006.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__007.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__008.png').convert_alpha(),
+                          pygame.image.load('assets/sprites/player/run/Run__009.png').convert_alpha(),
                           ]
-        self.image_fall = pygame.image.load('sprites/Fall.png').convert_alpha()
-        self.image = pygame.image.load('sprites/Run__000.png').convert_alpha()
+        self.image_fall = pygame.image.load('assets/sprites/player/fall/Fall.png').convert_alpha()
+        self.image = pygame.image.load('assets/sprites/player/run/Run__000.png').convert_alpha()
         self.rect = pygame.Rect(100, 100, 100, 100)
         self.mask = pygame.mask.from_surface(self.image)
         self.current_image = 0
@@ -147,7 +149,7 @@ class Player(pygame.sprite.Sprite):
 class Ground(pygame.sprite.Sprite):
     def __init__(self, xpos):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('sprites/ground.png').convert_alpha()
+        self.image = pygame.image.load('assets/sprites/ground.png').convert_alpha()
         self.image = pygame.transform.scale(self.image,(GROUND_WIDTH, GROUND_HEIGHT))
         self.rect = self.image.get_rect()
         self.rect[0] = xpos
@@ -159,7 +161,7 @@ class Ground(pygame.sprite.Sprite):
 class Obstacles(pygame.sprite.Sprite):
     def __init__(self, xpos, ysize):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('sprites/Box.png').convert_alpha()
+        self.image = pygame.image.load('assets/sprites/Box.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, [100, 100])
         self.rect = pygame.Rect(100, 100, 100, 100)
         self.rect[0] = xpos
@@ -168,12 +170,12 @@ class Obstacles(pygame.sprite.Sprite):
 
     def update(self, *args):
         self.rect[0] -= GAME_SPEED
-        print('obstacle')
+        # print('obstacle')
 
 class Coins(pygame.sprite.Sprite):
     def __init__(self, xpos, ysize):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('sprites/coin.png').convert_alpha()
+        self.image = pygame.image.load('assets/sprites/coin.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, [40, 40])
         self.rect = pygame.Rect(100, 100, 20, 20)
         self.mask = pygame.mask.from_surface(self.image)
@@ -182,7 +184,7 @@ class Coins(pygame.sprite.Sprite):
 
     def update(self, *args):
         self.rect[0] -= GAME_SPEED
-        print('coin')
+        # print('coin')
 
 def get_random_obstacles(xpos):
     size = random.randint(120, 600)
@@ -215,7 +217,7 @@ game_window_rect.center = (pygame.display.Info().current_w // 2, pygame.display.
 pygame.display.set_caption('Jogo 01')
 
 # Carregamento das imagens
-BACKGROUND = pygame.image.load('sprites/background_03.png')
+BACKGROUND = pygame.image.load('assets/sprites/background_03.png')
 BACKGROUND = pygame.transform.scale(BACKGROUND,[WIDTH, HEIGHT])
 
 # Grupos de sprites
@@ -243,6 +245,17 @@ gameloop = True
 placar = 0
 clock = pygame.time.Clock()
 
+# Imagens dos botões
+start_img = pygame.image.load('assets/sprites/buttons/start_btn.png').convert_alpha()
+restart_img = pygame.image.load('assets/sprites/buttons/restart_btn.png').convert_alpha()
+exit_img = pygame.image.load('assets/sprites/buttons/exit_btn.png').convert_alpha()
+resume_img = pygame.image.load('assets/sprites/buttons/resume_btn.png').convert_alpha()
+
+# Botões
+x = WIDTH / 2 - 150
+start_button = button.Button(x, 125, start_img, 1)
+exit_button = button.Button(x + 20, 325, exit_img, 1)
+
 # Loop da tela de início
 tela_inicio_loop = True
 def desenhar_tela_inicio():
@@ -260,8 +273,6 @@ def tela_inicio_loop():
     tela_inicio = True
 
     while tela_inicio:
-        pos_texto_iniciar, pos_texto_sair = desenhar_tela_inicio()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -272,31 +283,54 @@ def tela_inicio_loop():
                     sys.exit()
                 if tela_inicio:
                     tela_inicio = False  # Sai da tela de início quando qualquer tecla for pressionada
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if pos_texto_iniciar.collidepoint(event.pos):
-                    tela_inicio = False
-                    break
-                elif pos_texto_sair.collidepoint(event.pos):
-                    pygame.quit()
-                    sys.exit()
+            elif exit_button.draw(game_window):
+                pygame.quit()
+                sys.exit()
+            elif start_button.draw(game_window):
+                tela_inicio = False
 
         pygame.display.update()
 
 tela_inicio_loop()
 
+game_paused = False
 # Loop do jogo principal
+restart_button = button.Button(x, 300, restart_img, 1)
+exit_button = button.Button(x + 20, 450, exit_img, 1)
+resume_button = button.Button(x, 160, resume_img, 1)
+
 while gameloop:
     game_window.blit(BACKGROUND, (0, 0))
     font = pygame.font.SysFont('Arial',30)
     text = font.render('Placar', True, [255,255,255])
     game_window.blit(text, [1100, 20])
+
+    paused_font = pygame.font.SysFont('Arial Black',60)
+    paused_text = paused_font.render('Pause', True, "orange")
     contador = font.render(f'{placar}', True, [255,255,255])
     game_window.blit(contador, [1125, 50])
     clock.tick(30)
+
+    if game_paused:
+        GAME_SPEED = 0
+        game_window.blit(paused_text, (x + 30, 50))
+        
+        if resume_button.draw(game_window):
+            game_paused = False
+        if restart_button.draw(game_window):
+            pass
+        if exit_button.draw(game_window):
+            gameloop = False
+    else:
+        GAME_SPEED = 10
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                game_paused = not game_paused
 
     if is_off_screen(groundGroup.sprites()[0]):
         groundGroup.remove(groundGroup.sprites()[0])
@@ -320,16 +354,17 @@ while gameloop:
 
     if pygame.sprite.groupcollide(playerGroup, groundGroup, False, False):
         SPEED = 0
-        print('collision')
+        # print('collision')
     else:
         SPEED = 10
 
     if pygame.sprite.groupcollide(playerGroup, coinsGroup, False, True):
         placar += 1
+        coin_sound.play()
 
     if placar % 5 == 0 and placar != 0:
         GAME_SPEED += 0.02
-        print('GAMESPEED ALTERADA')
+        # print('GAMESPEED ALTERADA')
 
     if pygame.sprite.groupcollide(playerGroup, obstacleGroup, False, False):
         gameloop = False
@@ -339,9 +374,9 @@ while gameloop:
     obstacleGroup.update()
     coinsGroup.update()
 
+    obstacleGroup.draw(game_window)
     playerGroup.draw(game_window)
     groundGroup.draw(game_window)
-    obstacleGroup.draw(game_window)
     coinsGroup.draw(game_window)
 
     pygame.display.update()
