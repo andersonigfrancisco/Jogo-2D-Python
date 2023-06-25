@@ -91,6 +91,7 @@ def tela_jogo():
 
         if pygame.sprite.groupcollide(playerGroup, obstacleGroup, False, False):
             gameloop = False
+            
 
         
         pygame.display.update()
@@ -207,9 +208,6 @@ GROUND_HEIGHT = 40
 GAME_SPEED = 10
 SPEED = 0
 
-
-
-
 # Inicialização da janela de jogo
 game_window = pygame.display.set_mode([WIDTH, HEIGHT])
 game_window_rect = game_window.get_rect()
@@ -258,19 +256,13 @@ exit_button = button.Button(x + 20, 325, exit_img, 1)
 
 # Loop da tela de início
 tela_inicio_loop = True
-def desenhar_tela_inicio():
-    game_window.fill((0, 0, 0))  # Preenche a tela com a cor preta
-    font = pygame.font.SysFont('Arial', 30)
-    texto_iniciar = font.render('Pressione qualquer tecla para iniciar o jogo', True, (255, 255, 255))
-    pos_texto_iniciar = (WIDTH // 2 - texto_iniciar.get_width() // 2, HEIGHT // 2 - texto_iniciar.get_height() // 2)
-    game_window.blit(texto_iniciar, pos_texto_iniciar)
-    texto_sair = font.render('Pressione ESC para sair', True, (255, 255, 255))
-    pos_texto_sair = (WIDTH // 2 - texto_sair.get_width() // 2, HEIGHT // 2 + 50)
-    game_window.blit(texto_sair, pos_texto_sair)
-    return pos_texto_iniciar, pos_texto_sair  # Retorna as posições dos textos de início e sair
 
 def tela_inicio_loop():
     tela_inicio = True
+
+    bg_image = pygame.image.load("assets/bg.jpg").convert_alpha()
+    bg_image = pygame.transform.scale(bg_image,[WIDTH, HEIGHT])
+    game_window.blit(bg_image, (0 ,0))
 
     while tela_inicio:
         for event in pygame.event.get():
